@@ -1,53 +1,104 @@
 import React, { useContext, useState } from 'react'
 import signuplogo from '../../assets/signup.svg'
 import { GlobalState } from '../../middlewares/global-states'
+import Cookies from 'js-cookie'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Signup = () => {
     const { dispatch } = useContext(GlobalState)
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [age, setAge] = useState(0);
-    const [avatar, setAvatar] = useState('');
+    const [age, setAge] = useState(18);
+    const [gender, setGender] = useState('None');
+    const [avatar, setAvatar] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null)
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
+
+    const handleFile = (e) => {
+        const file = e.target.files[0];
+        setAvatar(file);
+        setAvatarPreview(URL.createObjectURL(file))
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('age', age);
+        formData.append('gender', gender);
+        formData.append('avatar', avatar);
+
+        await axios.post(`${process.env.REACT_APP_API_URL}/user/create`, formData)
+            .then(res => {
+                Cookies.set("authToken", res.data.token);
+                // console.log(res.data);
+                dispatch({ type: "FIRE_MODAL", payload: "" })
+                navigate('/')
+            })
+            .catch(err => alert(err.message))
+        setIsLoading(false)
+    }
+
+
 
     const closeModal = (e) => {
         e.preventDefault();
-        dispatch({ type: 'activeModal', payload: "" })
+        dispatch({ type: 'FIRE_MODAL', payload: "" })
     }
+
+    const openLoginModal = (e) => {
+        e.preventDefault();
+        dispatch({ type: 'FIRE_MODAL', payload: "LOGIN" })
+    }
+
+
     return (
         <div className="max-w-5xl w-full flex bg-white absolute top-10 ">
             <div className="w-1/2">
-                <form action="" className='p-8'>
+                <form onSubmit={handleSubmit} className='p-8'>
                     <div className="space-y-3">
                         <label htmlFor="name" className="flex flex-col">
                             <span className="">Name</span>
-                            <input type="text" id='name' className="input-form" />
+                            <input type="text" id='name' className="input-form" value={name} onChange={(e) => setName(e.target.value)} />
                         </label>
                         <label htmlFor="email" className="flex flex-col">
                             <span className="">Email</span>
-                            <input type="email" id='email' className="input-form" />
+                            <input type="email" id='email' className="input-form" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </label>
                         <label htmlFor="password" className="flex flex-col">
                             <span className="">Password</span>
-                            <input type="password" id='password' className="input-form" />
+                            <input type="password" id='password' className="input-form" value={password} onChange={(e) => setPassword(e.target.value)} />
                         </label>
                         <label htmlFor="age" className="flex flex-col">
                             <span className="">Age</span>
-                            <input type="number" id='name' className="input-form" />
+                            <input type="number" id='age' className="input-form" value={age} onChange={(e) => setAge(e.target.value)} />
                         </label>
                         <label htmlFor="gender" className="flex flex-col">
                             <span className="">Gender</span>
-                            <select name="gender" id="gender" className="input-form">
-                                <option value="">Preferred not to say</option>
+                            <select name="gender" id="gender" className="input-form" defaultValue="None" onChange={(e) => setGender(e.target.value)}>
+                                <option value="None">Preferred not to say</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
                         </label>
-                        <label htmlFor="avatar" className="flex flex-col">
+                        <label htmlFor="avatar" className="flex flex-col relative">
                             <span className="">Profile image</span>
-                            <input type="file" id='avatar' className="" />
+                            <input type="file" id='avatar' className="" onChange={(e) => handleFile(e)} />
                         </label>
+                        {avatarPreview &&
+                            <div className="rounded-full overflow-hidden w-fit">
+                                <img src={avatarPreview} alt="preview profile" className='w-20 h-20' />
+                            </div>}
 
+                        <p>Already have an account?<span className="text-blue-500 underline cursor-pointer" onClick={(e) =>openLoginModal(e)}>Log In</span></p>
                     </div>
                     <div className='flex justify-between mt-8'>
                         <button type='cancel' className='px-8 py-2 border-[1px] border-slate-500 rounded-md text-sm text-slate-500 font-semibold'
@@ -55,7 +106,7 @@ const Signup = () => {
                         >
                             Back
                         </button>
-                        <button type="submit" className='btn bg-secondary font-semibold'>Submit</button>
+                        <button type="submit" className={`btn font-semibold bg-secondary ${isLoading ? 'opacity-60' : ""}`} disabled={isLoading}>{!isLoading ? "Submit" : "Submiting..."}</button>
                     </div>
 
                 </form>

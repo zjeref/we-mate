@@ -11,19 +11,19 @@ export const initialState = {
 
 export const reducer = (state, action) => {
     switch (action.type) {
-        case "activeModal": {
+        case "FIRE_MODAL": {
             return {
                 ...state,
                 activeModal: action.payload
             }
         }
-        case "loggedIn": {
+        case "IS_LOGGED": {
             return {
                 ...state,
                 loggedIn: action.payload
             }
         }
-        case "loggedUser": {
+        case "SET_USER": {
             return {
                 ...state,
                 loggedUser: action.payload

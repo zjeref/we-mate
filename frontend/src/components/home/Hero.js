@@ -3,11 +3,15 @@ import hero from '../../assets/hero.svg'
 import { GlobalState } from '../../middlewares/global-states'
 
 const Hero = () => {
-    const {dispatch} = useContext(GlobalState)
+    const { dispatch } = useContext(GlobalState)
 
     //opens sign up modal
-    const openModal = () => {
-        dispatch({type:"activeModal", payload:"SIGNUP"})
+    const openSignupModal = () => {
+        dispatch({ type: "FIRE_MODAL", payload: "SIGNUP" })
+    }
+
+    const openLoginModal = () => {
+        dispatch({ type: "FIRE_MODAL", payload: "LOGIN" })
     }
 
     return (
@@ -15,7 +19,10 @@ const Hero = () => {
             <div className="w-[60%]">
                 <h1 className="text-4xl font-bold text-blackk">Find your perfect match on campus</h1>
                 <p className="my-8 text-2xl">Connect with like-minded college students who share your interests, goals, and values</p>
-                <button className="btn bg-secondary" onClick={openModal}>Sign up</button>
+                <div className="space-x-4">
+                    <button className="btn bg-secondary" onClick={openSignupModal}>Sign Up</button>
+                    <button className="btn bg-primary" onClick={openLoginModal}>Log In</button>
+                </div>
             </div>
             <div>
                 <img src={hero} alt="hero" className='w-96 h-64' />
