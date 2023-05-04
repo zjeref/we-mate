@@ -17,6 +17,14 @@ const userSchema = new Schema({
         required: true,
         trim: true
     },
+    age: {
+        type: Number,
+        required: true,
+    },
+    gender: {
+        type: String,
+        enum: ['None', 'Male', 'Female']
+    },
     avatar: {
         type: String,
     },

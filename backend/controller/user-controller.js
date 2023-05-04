@@ -5,12 +5,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.createAccount = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, age, gender } = req.body;
     const avatar = req.file;
 
     let imageUrl;
 
-    const existingUser = await User.findOne({ $or: [{ username: username }, { email: email }] })
+    const existingUser = await User.findOne({ email: email })
     if (existingUser) {
         return res.status(409).json({ error: 'Already exist' })
     }
@@ -35,6 +35,8 @@ exports.createAccount = asyncHandler(async (req, res) => {
         name: name,
         email: email,
         password: encry_password,
+        age:age,
+        gender: gender,
         avatar: imageUrl
     })
     await newUser.save();
