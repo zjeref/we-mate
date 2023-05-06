@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useReducer } from 'react';
 import { GlobalState, initialState, reducer } from './middlewares/global-states';
 import Home from './pages/Home'
+import Navbar from './components/Navbar';
+import Profile from './pages/Profile'
 import Protected from './middlewares/Protected';
 import Users from './components/home/Users';
 import Hero from './components/home/Hero';
@@ -12,13 +14,15 @@ function App() {
   return (
     <BrowserRouter>
       <GlobalState.Provider value={{ data: data, dispatch: dispatch }}>
+        <Navbar userData={data.loggedUser} />
         <Routes>
           <Route path="/" element={<Protected><Home /></Protected>} >
-            <Route path="" element={<Users/>}/>
+            <Route path="" element={<Users />} />
           </Route>
           <Route path="/verify" element={<Protected><Home /></Protected>} >
-            <Route path="" element={<Hero/>}/>
+            <Route path="" element={<Hero />} />
           </Route>
+          <Route path="/:id" element={<Protected><Profile/></Protected>} />
         </Routes>
 
       </GlobalState.Provider>

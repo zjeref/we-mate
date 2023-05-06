@@ -9,12 +9,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  @apply bg-background
+  @apply bg-background font-sans
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.navbarMenu {
+  @apply text-lg cursor-pointer hover:text-secondary
 }
 
 .btn {
@@ -31,4 +35,12 @@ code {
 
 .input-form {
   @apply border-[1px] rounded-md px-2 py-1
+}
+
+.img-grid {
+  @apply  bg-slate-300 rounded-lg min-h-[150px] flex justify-center items-center cursor-pointer relative overflow-hidden
+} 
+
+.img-btn {
+  @apply absolute top-1 right-1 text-3xl text-secondary w-4 h-4 flex items-center justify-center
 }

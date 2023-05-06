@@ -8,7 +8,7 @@ const Features = () => {
     return (
         <div className="max-w-6xl my-8">
             <h1 className="text-4xl text-center font-bold text-blackk my-14">Features and Benefits</h1>
-            <div className="flex justify-evenly space-x-2">
+            <div className="flex justify-around space-x-2">
                 <div className="flex flex-col-reverse">
                     <div className="feature_card">
                         <img src={feature_1} alt="feature_1" />

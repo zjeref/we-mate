@@ -8,7 +8,12 @@ const preferenceSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
     },
-
+    bio:{
+        type: String,
+    },
+    photoes: [{
+        type: String
+    }],
     stream: {
         type: String,
         enum: preferenceEnum.stream

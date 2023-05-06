@@ -8,8 +8,8 @@ const upload = multer();
 
 router.post('/create', upload.single('avatar'), createAccount)
 router.post('/verify', verifyAccount)
-router.get('/user', getAccount)
-router.get('/me', protect,  getMe)
+router.get('/detail/:id', getAccount)
+router.get('/me', protect, getMe)
 // router.get('/matches', matches)
 
 module.exports = router

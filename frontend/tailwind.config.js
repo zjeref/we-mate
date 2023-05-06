@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+/** @type {import('fontsource-poppins').Config} */
+
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -11,6 +13,9 @@ module.exports = {
         secondary: "#FF4026",
         blackk: "#393939"
       }
+    },
+    fontFamily: {
+      sans: ['Poppins', 'sans-serif'],
     },
   },
   plugins: [],
