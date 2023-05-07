@@ -26,10 +26,10 @@ code {
 }
 
 .feature_card {
-  @apply bg-white w-64 h-72 flex justify-center items-center 
+  @apply bg-white w-64 h-72 flex justify-center items-center
 }
 
-.feature_card img{
+.feature_card img {
   @apply w-16
 }
 
@@ -38,8 +38,9 @@ code {
 }
 
 .img-grid {
-  @apply  bg-slate-300 rounded-lg min-h-[150px] flex justify-center items-center cursor-pointer relative overflow-hidden
-} 
+  @apply bg-slate-300 rounded-lg flex justify-center items-center cursor-pointer relative overflow-hidden
+  
+}
 
 .img-btn {
   @apply absolute top-1 right-1 text-3xl text-secondary w-4 h-4 flex items-center justify-center

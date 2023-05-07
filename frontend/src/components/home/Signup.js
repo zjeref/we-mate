@@ -12,18 +12,10 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [age, setAge] = useState(18);
     const [gender, setGender] = useState('None');
-    const [avatar, setAvatar] = useState(null);
-    const [avatarPreview, setAvatarPreview] = useState(null)
 
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
-
-    const handleFile = (e) => {
-        const file = e.target.files[0];
-        setAvatar(file);
-        setAvatarPreview(URL.createObjectURL(file))
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,7 +26,6 @@ const Signup = () => {
         formData.append('password', password);
         formData.append('age', age);
         formData.append('gender', gender);
-        formData.append('avatar', avatar);
 
         await axios.post(`${process.env.REACT_APP_API_URL}/user/create`, formData)
             .then(res => {
@@ -89,15 +80,6 @@ const Signup = () => {
                                 <option value="Female">Female</option>
                             </select>
                         </label>
-                        <label htmlFor="avatar" className="flex flex-col relative">
-                            <span className="">Profile image</span>
-                            <input type="file" id='avatar' className="" onChange={(e) => handleFile(e)} />
-                        </label>
-                        {avatarPreview &&
-                            <div className="rounded-full overflow-hidden w-fit">
-                                <img src={avatarPreview} alt="preview profile" className='w-20 h-20' />
-                            </div>}
-
                         <p>Already have an account?<span className="text-blue-500 underline cursor-pointer" onClick={(e) =>openLoginModal(e)}>Log In</span></p>
                     </div>
                     <div className='flex justify-between mt-8'>
