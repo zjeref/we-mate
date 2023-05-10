@@ -39,9 +39,20 @@ code {
 
 .img-grid {
   @apply bg-slate-300 rounded-lg flex justify-center items-center cursor-pointer relative overflow-hidden
-  
 }
 
 .img-btn {
   @apply absolute top-1 right-1 text-3xl text-secondary w-4 h-4 flex items-center justify-center
+}
+
+.match-btn {
+  @apply px-8 py-3 rounded-md text-xs font-bold
+}
+
+.match-text {
+  @apply font-bold text-xl capitalize drop-shadow-4xl shadow-black
+}
+
+.bg-gradient-stop-30 {
+  background-image: linear-gradient(to top, rgba(32, 31, 31, 0.500) 40%, transparent);
 }

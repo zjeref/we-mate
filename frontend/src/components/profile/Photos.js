@@ -102,7 +102,6 @@ const Photos = ({ photosData }) => {
         const token = Cookies.get('authToken');
         const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` }
         const formData = new FormData();
-        console.log(fileImage)
         fileImage.forEach((file, index) => {
             if (file !== null) {
                 formData.append('myImage', file);

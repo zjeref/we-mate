@@ -18,7 +18,6 @@ const Protected = ({ children }) => {
                 .then(res => {
                     dispatch({ type: 'SET_USER', payload: res.data })
                     dispatch({ type: 'IS_LOGGED', payload: true })
-                    navigate('/')
                 })
                 .catch(err => {
                     console.log(err);

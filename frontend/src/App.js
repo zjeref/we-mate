@@ -7,6 +7,7 @@ import Profile from './pages/Profile'
 import Protected from './middlewares/Protected';
 import Users from './components/home/Users';
 import Hero from './components/home/Hero';
+import Matches from './pages/Matches';
 
 function App() {
   const [data, dispatch] = useReducer(reducer, initialState);
@@ -23,6 +24,7 @@ function App() {
             <Route path="" element={<Hero />} />
           </Route>
           <Route path="/:id" element={<Protected><Profile/></Protected>} />
+          <Route path="/match/:id" element={<Protected><Matches/></Protected>} />
         </Routes>
 
       </GlobalState.Provider>

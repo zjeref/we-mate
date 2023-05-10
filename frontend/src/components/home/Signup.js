@@ -20,14 +20,8 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('age', age);
-        formData.append('gender', gender);
 
-        await axios.post(`${process.env.REACT_APP_API_URL}/user/create`, formData)
+        await axios.post(`${process.env.REACT_APP_API_URL}/user/create`, {name, email, password,age,gender})
             .then(res => {
                 Cookies.set("authToken", res.data.token);
                 // console.log(res.data);

@@ -44,7 +44,7 @@ const Login = () => {
     }
 
     return (
-        <div className="max-w-5xl w-full flex bg-white absolute top-10 ">
+        <div className="max-w-5xl w-full flex bg-white absolute top-10">
             <div className="w-1/2">
                 <form onSubmit={handleSubmit} className='p-8'>
                     <div className="space-y-3">

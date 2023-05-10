@@ -26,11 +26,11 @@ const Profile = () => {
         <div className="w-full flex flex-col items-center px-4">
             {prefer &&
                 <>
-                    <Strength />
+                    <Strength photosData={prefer.photoes} />
                     <Photos photosData={prefer.photoes} />
                     <Bio bioData={prefer.bio} />
-                    <AboutMe />
-                    <Interests interestData={prefer?.interest} />
+                    <AboutMe aboutData={prefer}/>
+                    <Interests interestData={prefer} />
                 </>
             }
         </div>

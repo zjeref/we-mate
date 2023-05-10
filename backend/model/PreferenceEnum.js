@@ -1,5 +1,5 @@
-export const preferenceEnum = {
-    stream: [
+exports.preferenceEnum = {
+    course: [
         'Engineering',
         'Business and Management',
         'Law and Justice',

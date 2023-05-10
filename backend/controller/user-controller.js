@@ -6,30 +6,14 @@ const jwt = require('jsonwebtoken');
 
 exports.createAccount = asyncHandler(async (req, res) => {
     const { name, email, password, age, gender } = req.body;
-    const avatar = req.file;
 
-    let imageUrl;
 
     const existingUser = await User.findOne({ email: email })
     if (existingUser) {
         return res.status(409).json({ error: 'Already exist' })
     }
 
-    const body = {
-        image: avatar.buffer.toString('base64'), // Convert the file buffer to a base64-encoded string
-        type: 'base64'
-    };
 
-    const headers = {
-        Authorization: `Client-ID ${process.env.IMGUR_ID}`,
-    };
-
-    try {
-        const res = await axios.post('https://api.imgur.com/3/image', body, { headers });
-        imageUrl = res.data.data.link
-    } catch (error) {
-        return res.status(501).json({ message: 'File Upload Error' });
-    }
     const encry_password = bcrypt.hashSync(password);
     const newUser = new User({
         name: name,
@@ -37,7 +21,6 @@ exports.createAccount = asyncHandler(async (req, res) => {
         password: encry_password,
         age:age,
         gender: gender,
-        avatar: imageUrl
     })
     await newUser.save();
 
@@ -46,7 +29,6 @@ exports.createAccount = asyncHandler(async (req, res) => {
         name: newUser.name,
         username: newUser.username,
         email: newUser.email,
-        avatar: newUser.avatar,
         token: generateToken(newUser._id)
     })
 })
@@ -74,7 +56,7 @@ exports.verifyAccount = asyncHandler(async (req, res) => {
 })
 
 exports.getAccount = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const id = req.user._id;
     const user = await User.findById(id).select('-password');
     if (!user) return res.status(404).json({ message: "User does not exist" })
 

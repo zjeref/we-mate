@@ -4,32 +4,33 @@ const Schema = mongoose.Schema;
 const preferenceEnum = require('./PreferenceEnum')
 
 const preferenceSchema = new Schema({
-    user:{
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
+        required: true
     },
-    bio:{
+    bio: {
         type: String,
     },
     photoes: [{
         type: String
     }],
-    stream: {
+    course: {
         type: String,
-        enum: preferenceEnum.stream
+        enum: preferenceEnum.course
     },
-    hobbies: [{
+    hobbies: {
         type: String,
         enum: preferenceEnum.hobbies
-    }],
-    music: [{
+    },
+    music: {
         type: String,
         enum: preferenceEnum.music
-    }],
-    movies: [{
+    },
+    movies: {
         type: String,
         enum: preferenceEnum.movies
-    }],
+    },
     personality: {
         type: String,
         enum: preferenceEnum.personality

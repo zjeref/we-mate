@@ -17,13 +17,17 @@ const Navbar = ({ userData }) => {
         navigate(`/${currentUser._id}`)
     }
 
+    const openMatch = () => {
+        navigate(`/match/${currentUser._id}`)
+    }
+
     return (
         <div className="w-full flex flex-col items-center px-4">
             <div className='max-w-6xl w-full p-2 flex justify-between my-2'>
                 <img src={logo} alt="logo" />
                 <div className='flex space-x-10 text-blackk font-sans text-lg '>
                     <p className='navbarMenu' onClick={() => Cookies.remove('authToken')}>HOME</p>
-                    <p className='navbarMenu' >FIND MATCHES</p>
+                    <p className='navbarMenu' onClick={()=> openMatch()}>FIND MATCHES</p>
                     <p className='navbarMenu' >ABOUT US</p>
                     <p className='navbarMenu' >CONTACT</p>
                     {currentUser && currentUser.name ?
