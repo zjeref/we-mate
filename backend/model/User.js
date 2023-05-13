@@ -31,7 +31,15 @@ const userSchema = new Schema({
     preference: {
         type: Schema.Types.ObjectId,
         ref: 'Preference'
-    }
+    },
+    swipedRight: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    swipedLeft: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }]
 }, { timestamps: true });
 
 

@@ -1,4 +1,5 @@
 const User = require('../model/User');
+const Preference = require('../model/Preference');
 const asyncHandler = require('express-async-handler');
 const axios = require('axios')
 const bcrypt = require('bcryptjs');
@@ -19,7 +20,7 @@ exports.createAccount = asyncHandler(async (req, res) => {
         name: name,
         email: email,
         password: encry_password,
-        age:age,
+        age: age,
         gender: gender,
     })
     await newUser.save();
@@ -40,7 +41,7 @@ exports.verifyAccount = asyncHandler(async (req, res) => {
     if (!existingUser) {
         return res.status(404).json({ message: "Account doesn't exist" })
     }
-
+    console.log(generateToken(existingUser._id))
     if (bcrypt.compare(password, existingUser.password)) {
         res.status(200).json({
             _id: existingUser._id,
@@ -67,60 +68,72 @@ exports.getMe = asyncHandler(async (req, res) => {
     res.send(req.user);
 })
 
-// preferences: {
-//     college: String,
-//     hobbies: [String],
-//     drinks: [String],
-//     favShows: [{
-//       name: String,
-//       genre: String,
-//     }],
-//     favSongs: [{
-//       name: String,
-//       genre: String,
-//     }],
-//     departments: [String],
-//   },
 
-async function findMatches(user) {
-    const potentialMatches = await User.find({
-        // Query the database for users whose preferences match at least one of the current user's preferences
-        $or: [
-            { "preferences.college": user.preferences.college },
-            { "preferences.hobbies": { $in: user.preferences.hobbies } },
-            { "preferences.drinks": { $in: user.preferences.drinks } },
-            { "preferences.favShows.genre": { $in: user.preferences.favShows.map(show => show.genre) } },
-            { "preferences.favSongs.genre": { $in: user.preferences.favSongs.map(song => song.genre) } },
-            { "preferences.departments": { $in: user.preferences.departments } },
-        ],
+exports.getUserMatches = asyncHandler(async (req, res) => {
+    const currUser = req.user;
+    const userId = currUser._id;
+    // console.log(req.user)
+    const user = await User.findById(userId).populate('preference');
+    const preference = await Preference.findOne({ user: userId });
+
+    const potentialMatches = await Preference.find({
+        user: { $ne: userId },
+    }).populate({
+        path: 'user',
+        select: '-password',
+        populate: {
+            path: 'preference',
+            select: '-user -_id',
+        },
     });
 
-    // Calculate the match score for each potential match
-    const matchesWithScore = potentialMatches.map(match => ({
-        user: match,
-        score: (
-            (match.preferences.college === user.preferences.college) +
-            match.preferences.hobbies.filter(hobby => user.preferences.hobbies.includes(hobby)).length +
-            match.preferences.drinks.filter(drink => user.preferences.drinks.includes(drink)).length +
-            match.preferences.favShows.filter(show => user.preferences.favShows.some(userShow => userShow.genre === show.genre)).length +
-            match.preferences.favSongs.filter(song => user.preferences.favSongs.some(userSong => userSong.genre === song.genre)).length +
-            match.preferences.departments.filter(department => user.preferences.departments.includes(department)).length
-        ),
-    }));
+    const matches = potentialMatches.map(match => {
+        let score = 0;
+        const matchPreference = match;
+        if (user.swipedLeft.includes(match.user._id) || user.swipedRight.includes(match.user._id)) {
+            // exclude users that have already been swiped left or right
+            return null;
+        }
+        if (preference.course === matchPreference.course) score++;
+        if (preference.hobbies === matchPreference.hobbies) score++;
+        if (preference.music === matchPreference.music) score++;
+        if (preference.movies === matchPreference.movies) score++;
+        if (preference.personality === matchPreference.personality) score++;
+        if (preference.sociality === matchPreference.sociality) score++;
 
-    // Sort the matches by their match score in descending order
-    const sortedMatches = matchesWithScore.sort((match1, match2) => match2.score - match1.score);
+        return { user: match.user, score };
+    }).filter(match => match !== null);
 
-    return sortedMatches;
-}
+    matches.sort((a, b) => b.score - a.score);
 
-// app.get('/users/:userId/matches', async (req, res) => {
-//     const user = await User.findById(req.params.userId);
+    res.send(matches);
+});
 
-//     const matches = await findMatches(user);
+exports.leftSwipe = asyncHandler(async (req, res) => {
+    const currUser = req.user;
+    console.log("dsada")
+    const userId = currUser._id;
+    const {targetUser} = req.body;
+    const user = await User.findById(userId);
+    user.swipedLeft = [...user.swipedLeft, targetUser];
+    user.save();
+    res.send("Success")
+})
 
-//     res.json(matches);
-// });
+exports.rightSwipe = asyncHandler(async (req, res) => {
+    const currUser = req.user;
+    const userId = currUser._id;
+    const {targetUser} = req.body;
+    const user = await User.findById(userId);
+    user.swipedRight = [...user.swipedRight, targetUser];
+    user.save();
+    res.send("Success")
+})
+
+exports.getallUsers = asyncHandler(async (req, res) => {
+    const allUsers = await User.find();
+    res.send(allUsers)
+})
 
 
 

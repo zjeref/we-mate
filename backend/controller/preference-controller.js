@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Preference = require('../model/Preference');
+const User = require('../model/User');
 const PreferenceEnum = require('../model/PreferenceEnum');
 const axios = require('axios')
 
@@ -15,6 +16,10 @@ exports.addImages = asyncHandler(async (req, res) => {
         userPref = new Preference({
             user: req.user._id,
         });
+        const user = await User.findById(id);
+        user.preference = userPref._id;
+        userPref.save();
+        user.save();
     }
     if (!images || images.length === 0) {
         return res.status(400).json({ error: 'Please provide at least one image' });
@@ -53,9 +58,15 @@ exports.addImages = asyncHandler(async (req, res) => {
 
 exports.prefer = asyncHandler(async (req, res) => {
     const id = req.user._id;
-    const userPref = await Preference.findOne({ user: id });
+    let userPref = await Preference.findOne({ user: id });
     if (!userPref) {
-        const prefer = new Preference();
+        userPref = new Preference({
+            user: id,
+        });
+        const user = await User.findById(id);
+        user.preference = userPref._id;
+        userPref.save();
+        user.save();
         res.status(200).json(prefer)
     }
     res.status(200).json(userPref);
@@ -67,8 +78,12 @@ exports.addBio = asyncHandler(async (req, res) => {
     let userPref = await Preference.findOne({ user: id });
     if (!userPref) {
         userPref = new Preference({
-            user: id,
+            user: req.user._id,
         });
+        const user = await User.findById(id);
+        user.preference = userPref._id;
+        userPref.save();
+        user.save();
     }
     userPref.bio = bio;
     userPref.save();
@@ -81,8 +96,12 @@ exports.addAbout = asyncHandler(async (req, res) => {
     let userPref = await Preference.findOne({ user: id });
     if (!userPref) {
         userPref = new Preference({
-            user: id,
+            user: req.user._id,
         });
+        const user = await User.findById(id);
+        user.preference = userPref._id;
+        userPref.save();
+        user.save();
     }
     userPref.course = course;
     userPref.personality = personality;
@@ -98,8 +117,12 @@ exports.addInterests = asyncHandler(async (req, res) => {
     let userPref = await Preference.findOne({ user: id });
     if (!userPref) {
         userPref = new Preference({
-            user: id,
+            user: req.user._id,
         });
+        const user = await User.findById(id);
+        user.preference = userPref._id;
+        userPref.save();
+        user.save();
     }
     userPref.movies = movies;
     userPref.hobbies = hobbies;
