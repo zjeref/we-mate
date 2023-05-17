@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { GlobalState } from '../../middlewares/global-states';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
@@ -19,7 +18,6 @@ const MatchList = () => {
         }
         const token = Cookies.get('authToken');
         const headers = { 'Authorization': `Bearer ${token}` }
-        console.log(headers)
         axios.get(`${process.env.REACT_APP_API_URL}/user/matches`, { headers })
             .then(res => setPrefer(res.data))
             .catch(err => console.error(err))
@@ -28,7 +26,6 @@ const MatchList = () => {
     const handleRematch = async() => {
         const token = Cookies.get('authToken');
         const headers = { 'Authorization': `Bearer ${token}` }
-        console.log(headers)
         axios.put(`${process.env.REACT_APP_API_URL}/user/leftswipe`, {targetUser:prefer[index].user._id}, { headers })
             .then(res => console.log("Rematched"))
             .catch(err => console.error(err))
@@ -39,7 +36,7 @@ const MatchList = () => {
         const token = Cookies.get('authToken');
         const headers = { 'Authorization': `Bearer ${token}` }
 
-        await axios.put(`${process.env.REACT_APP_API_URL}/user/rightswipe`, {targetUser:prefer[index].user._id}, { headers })
+        await axios.put(`${process.env.REACT_APP_API_URL}/user/rightswipe`, {targetUserId:prefer[index].user._id}, { headers })
             .then(res => console.log("Connection sent"))
             .catch(err => console.error(err))
         setIndex(index+1)

@@ -56,3 +56,11 @@ code {
 .bg-gradient-stop-30 {
   background-image: linear-gradient(to top, rgba(32, 31, 31, 0.500) 40%, transparent);
 }
+
+.senderRadius {
+  border-radius: 15px 15px 0px 15px;
+}
+
+.receiverRadius {
+  border-radius: 15px 15px 15px 0px;
+}

@@ -1,7 +1,7 @@
 const User = require('../model/User');
 const Preference = require('../model/Preference');
+const Message = require('../model/Message');
 const asyncHandler = require('express-async-handler');
-const axios = require('axios')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -65,7 +65,7 @@ exports.getAccount = asyncHandler(async (req, res) => {
 })
 
 exports.getMe = asyncHandler(async (req, res) => {
-    res.send(req.user);
+    res.json(req.user);
 })
 
 
@@ -94,28 +94,27 @@ exports.getUserMatches = asyncHandler(async (req, res) => {
             // exclude users that have already been swiped left or right
             return null;
         }
-        if (preference.course === matchPreference.course) score++;
-        if (preference.hobbies === matchPreference.hobbies) score++;
-        if (preference.music === matchPreference.music) score++;
-        if (preference.movies === matchPreference.movies) score++;
-        if (preference.personality === matchPreference.personality) score++;
-        if (preference.sociality === matchPreference.sociality) score++;
+        if (preference.course === matchPreference.course) score += 20;
+        if (preference.hobbies === matchPreference.hobbies) score += 10;
+        if (preference.music === matchPreference.music) score += 10;
+        if (preference.movies === matchPreference.movies) score += 10;
+        if (preference.personality === matchPreference.personality) score += 20;
+        if (preference.sociality === matchPreference.sociality) score += 30;
 
         return { user: match.user, score };
     }).filter(match => match !== null);
 
     matches.sort((a, b) => b.score - a.score);
 
-    res.send(matches);
+    res.json(matches);
 });
 
 exports.leftSwipe = asyncHandler(async (req, res) => {
     const currUser = req.user;
-    console.log("dsada")
     const userId = currUser._id;
-    const {targetUser} = req.body;
+    const { targetUserId } = req.body;
     const user = await User.findById(userId);
-    user.swipedLeft = [...user.swipedLeft, targetUser];
+    user.swipedLeft = [...user.swipedLeft, targetUserId];
     user.save();
     res.send("Success")
 })
@@ -123,20 +122,38 @@ exports.leftSwipe = asyncHandler(async (req, res) => {
 exports.rightSwipe = asyncHandler(async (req, res) => {
     const currUser = req.user;
     const userId = currUser._id;
-    const {targetUser} = req.body;
-    const user = await User.findById(userId);
-    user.swipedRight = [...user.swipedRight, targetUser];
+    const { targetUserId } = req.body;
+    console.log(userId, targetUserId);
+    const user = await User.findById(userId).select("-password");
+    const targetUser = await User.findById(targetUserId).select("-password");
+    console.log(targetUser)
+    user.swipedRight = [...user.swipedRight, targetUserId];
+    if (targetUser.swipedRight.includes(userId) && user.swipedRight.includes(targetUserId)) {
+        user.matched = [...user.matched, targetUserId]
+        targetUser.matched = [...targetUser.matched, userId]
+    }
+    targetUser.save();
     user.save();
     res.send("Success")
 })
 
-exports.getallUsers = asyncHandler(async (req, res) => {
-    const allUsers = await User.find();
-    res.send(allUsers)
+
+exports.getallMatches = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const user = await User.findById(userId).populate({
+        path: 'matched',
+        populate: {
+          path: 'preference',
+          select: 'photoes'
+        }
+      });
+    res.json(user.matched)
 })
 
-
-
+exports.getallUsers = asyncHandler(async (req, res) => {
+    const allUsers = await User.find();
+    res.json(allUsers)
+})
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET_KEY);

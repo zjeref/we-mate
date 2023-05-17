@@ -13,11 +13,11 @@ const Bio = ({ bioData }) => {
         setIsLoading(true)
         const token = Cookies.get('authToken');
         const headers = { 'Authorization': `Bearer ${token}` }
-        const formData = new FormData();
-        formData.append('bio', bio);
-        console.log(formData);
         await axios.put(`${process.env.REACT_APP_API_URL}/prefer/bio`, {bio}, {headers })
-            .then(res => setBio(res.data))
+            .then(res => {
+                setBio(res.data)
+                console.log(res.data)
+            })
             .catch(err => console.error(err))
         setIsLoading(false)
     }

@@ -6,7 +6,8 @@ export const GlobalState = createContext();
 export const initialState = {
     activeModal:"",
     loggedIn : false,
-    loggedUser : {}
+    loggedUser : {},
+    currentChat:{}
 }
 
 export const reducer = (state, action) => {
@@ -27,6 +28,12 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 loggedUser: action.payload
+            }
+        }
+        case "CURRENT_CHAT":{
+            return {
+                ...state,
+                currentChat: action.payload
             }
         }
         default: {

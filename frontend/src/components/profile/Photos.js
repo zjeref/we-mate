@@ -109,7 +109,7 @@ const Photos = ({ photosData }) => {
         });
 
         await axios.put(`${process.env.REACT_APP_API_URL}/prefer/images`, formData, { headers })
-            .then(res => console.log("photos saved"))
+            .then(res => alert("photos saved"))
             .catch(err => console.error(err))
 
         setIsLoading(false);

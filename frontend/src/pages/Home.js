@@ -4,6 +4,9 @@ import Signup from '../components/home/Signup'
 import { GlobalState } from '../middlewares/global-states'
 import { Outlet } from 'react-router-dom'
 import Login from '../components/home/Login'
+import Testimonials from '../components/home/Testimonials'
+import Aboutus from '../components/home/Aboutus'
+import Footer from '../components/home/Footer'
 
 const Home = () => {
     const { data } = useContext(GlobalState)
@@ -32,6 +35,9 @@ const Home = () => {
                 <div className="relative">
                     <Outlet />
                     <Features />
+                    <Testimonials/>
+                    <Aboutus/>
+                    <Footer/>
                 </div>
             </div>
         </>

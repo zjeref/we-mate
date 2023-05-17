@@ -19,14 +19,14 @@ const userSchema = new Schema({
     },
     age: {
         type: Number,
-        required: true,
+        required: true
     },
     gender: {
         type: String,
         enum: ['None', 'Male', 'Female']
     },
     avatar: {
-        type: String,
+        type: String
     },
     preference: {
         type: Schema.Types.ObjectId,
@@ -39,11 +39,12 @@ const userSchema = new Schema({
     swipedLeft: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    matched: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
 }, { timestamps: true });
 
-
-
-
 module.exports = mongoose.model('User', userSchema);
-
