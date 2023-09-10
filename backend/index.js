@@ -9,7 +9,6 @@ const preferenceRoutes = require("./routes/preference-routes");
 const chatRoutes = require("./routes/chat-routes");
 const Message = require("./model/Message");
 
-const server = require("http").createServer(app);
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -27,24 +26,9 @@ app.use("/api/user", userRoutes);
 app.use("/api/prefer", preferenceRoutes);
 app.use("/api/chat", chatRoutes);
 
-// Socket event listeners and handlers
-// io.on('connection', (socket) => {
-//   console.log('Connection Done');
-
-//   socket.on('disconnect', () => {
-//     console.log('user disconnected');
-//   });
-
-//   socket.on('directMessage', async (messageObj) => {
-//     const message = new Message(messageObj);
-//     await message.save();
-//     io.to(messageObj.receiver).emit('directMessage', messageObj); // Emit to receiver
-//     io.to(messageObj.sender).emit('directMessage', messageObj); // Emit to sender
-//   });
-// });
 
 const PORT = process.env.PORT || 4000;
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
