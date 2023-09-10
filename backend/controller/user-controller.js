@@ -94,12 +94,12 @@ exports.getUserMatches = asyncHandler(async (req, res) => {
             // exclude users that have already been swiped left or right
             return null;
         }
-        if (preference.course === matchPreference.course) score += 20;
-        if (preference.hobbies === matchPreference.hobbies) score += 10;
-        if (preference.music === matchPreference.music) score += 10;
-        if (preference.movies === matchPreference.movies) score += 10;
-        if (preference.personality === matchPreference.personality) score += 20;
-        if (preference.sociality === matchPreference.sociality) score += 30;
+        if (preference?.course === matchPreference.course) score += 20;
+        if (preference?.hobbies === matchPreference.hobbies) score += 10;
+        if (preference?.music === matchPreference.music) score += 10;
+        if (preference?.movies === matchPreference.movies) score += 10;
+        if (preference?.personality === matchPreference.personality) score += 20;
+        if (preference?.sociality === matchPreference.sociality) score += 30;
 
         return { user: match.user, score };
     }).filter(match => match !== null);
